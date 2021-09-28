@@ -1,0 +1,268 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DBTMSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="TB_Note">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Note Des" Type="nvarchar(max)" />
+          <Property Name="Note Manger" Type="nvarchar" MaxLength="50" />
+          <Property Name="Note User" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="TB_Projects">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProjectName" Type="nvarchar" MaxLength="50" />
+          <Property Name="ProjectDes" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="TB_Tasks">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID_Project" Type="int" />
+          <Property Name="ID_User" Type="int" />
+          <Property Name="Task Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="Task Des" Type="nvarchar(max)" />
+          <Property Name="Task User" Type="nvarchar" MaxLength="50" />
+          <Property Name="Task Admin" Type="nvarchar" MaxLength="50" />
+          <Property Name="Task Project" Type="nvarchar" MaxLength="50" />
+          <Property Name="Task Start" Type="date" />
+          <Property Name="Task End" Type="date" />
+          <Property Name="Task Duration" Type="int" />
+          <Property Name="Task State" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="TB_Users">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FullName" Type="nvarchar" MaxLength="50" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" />
+          <Property Name="Role" Type="nvarchar" MaxLength="50" />
+          <Property Name="State" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <Association Name="FK_TB_Tasks_TB_Projects">
+          <End Role="TB_Projects" Type="Self.TB_Projects" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TB_Tasks" Type="Self.TB_Tasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TB_Projects">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TB_Tasks">
+              <PropertyRef Name="ID_Project" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TB_Tasks_TB_Users">
+          <End Role="TB_Users" Type="Self.TB_Users" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TB_Tasks" Type="Self.TB_Tasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TB_Users">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TB_Tasks">
+              <PropertyRef Name="ID_User" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DBTMSModelStoreContainer">
+          <EntitySet Name="TB_Note" EntityType="Self.TB_Note" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TB_Projects" EntityType="Self.TB_Projects" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TB_Tasks" EntityType="Self.TB_Tasks" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TB_Users" EntityType="Self.TB_Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_TB_Tasks_TB_Projects" Association="Self.FK_TB_Tasks_TB_Projects">
+            <End Role="TB_Projects" EntitySet="TB_Projects" />
+            <End Role="TB_Tasks" EntitySet="TB_Tasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TB_Tasks_TB_Users" Association="Self.FK_TB_Tasks_TB_Users">
+            <End Role="TB_Users" EntitySet="TB_Users" />
+            <End Role="TB_Tasks" EntitySet="TB_Tasks" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DBTMSModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="TB_Users">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FullName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Role" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="State" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="TB_Tasks" Relationship="DBTMSModel.FK_TB_Tasks_TB_Users" FromRole="TB_Users" ToRole="TB_Tasks" />
+        </EntityType>
+        <EntityContainer Name="DBTMSEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="TB_Users" EntityType="Self.TB_Users" />
+          <EntitySet Name="TB_Projects" EntityType="DBTMSModel.TB_Projects" />
+          <EntitySet Name="TB_Tasks" EntityType="DBTMSModel.TB_Tasks" />
+          <AssociationSet Name="FK_TB_Tasks_TB_Projects" Association="DBTMSModel.FK_TB_Tasks_TB_Projects">
+            <End Role="TB_Projects" EntitySet="TB_Projects" />
+            <End Role="TB_Tasks" EntitySet="TB_Tasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TB_Tasks_TB_Users" Association="DBTMSModel.FK_TB_Tasks_TB_Users">
+            <End Role="TB_Users" EntitySet="TB_Users" />
+            <End Role="TB_Tasks" EntitySet="TB_Tasks" />
+          </AssociationSet>
+          <EntitySet Name="TB_Note" EntityType="DBTMSModel.TB_Note" />
+        </EntityContainer>
+        <EntityType Name="TB_Projects">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProjectName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ProjectDes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="TB_Tasks" Relationship="DBTMSModel.FK_TB_Tasks_TB_Projects" FromRole="TB_Projects" ToRole="TB_Tasks" />
+        </EntityType>
+        <EntityType Name="TB_Tasks">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID_Project" Type="Int32" />
+          <Property Name="ID_User" Type="Int32" />
+          <Property Name="Task_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Task_Des" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Task_User" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Task_Admin" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Task_Project" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Task_Start" Type="DateTime" Precision="0" />
+          <Property Name="Task_End" Type="DateTime" Precision="0" />
+          <Property Name="Task_Duration" Type="Int32" />
+          <Property Name="Task_State" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="TB_Projects" Relationship="DBTMSModel.FK_TB_Tasks_TB_Projects" FromRole="TB_Tasks" ToRole="TB_Projects" />
+          <NavigationProperty Name="TB_Users" Relationship="DBTMSModel.FK_TB_Tasks_TB_Users" FromRole="TB_Tasks" ToRole="TB_Users" />
+        </EntityType>
+        <Association Name="FK_TB_Tasks_TB_Projects">
+          <End Type="DBTMSModel.TB_Projects" Role="TB_Projects" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="DBTMSModel.TB_Tasks" Role="TB_Tasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TB_Projects">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TB_Tasks">
+              <PropertyRef Name="ID_Project" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TB_Tasks_TB_Users">
+          <End Type="DBTMSModel.TB_Users" Role="TB_Users" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="DBTMSModel.TB_Tasks" Role="TB_Tasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TB_Users">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TB_Tasks">
+              <PropertyRef Name="ID_User" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="TB_Note">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Note_Des" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Note_Manger" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Note_User" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DBTMSModelStoreContainer" CdmEntityContainer="DBTMSEntities">
+          <EntitySetMapping Name="TB_Users">
+            <EntityTypeMapping TypeName="DBTMSModel.TB_Users">
+              <MappingFragment StoreEntitySet="TB_Users">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="FullName" ColumnName="FullName" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
+                <ScalarProperty Name="State" ColumnName="State" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TB_Projects">
+            <EntityTypeMapping TypeName="DBTMSModel.TB_Projects">
+              <MappingFragment StoreEntitySet="TB_Projects">
+                <ScalarProperty Name="ProjectDes" ColumnName="ProjectDes" />
+                <ScalarProperty Name="ProjectName" ColumnName="ProjectName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TB_Tasks">
+            <EntityTypeMapping TypeName="DBTMSModel.TB_Tasks">
+              <MappingFragment StoreEntitySet="TB_Tasks">
+                <ScalarProperty Name="Task_State" ColumnName="Task State" />
+                <ScalarProperty Name="Task_Duration" ColumnName="Task Duration" />
+                <ScalarProperty Name="Task_End" ColumnName="Task End" />
+                <ScalarProperty Name="Task_Start" ColumnName="Task Start" />
+                <ScalarProperty Name="Task_Project" ColumnName="Task Project" />
+                <ScalarProperty Name="Task_Admin" ColumnName="Task Admin" />
+                <ScalarProperty Name="Task_User" ColumnName="Task User" />
+                <ScalarProperty Name="Task_Des" ColumnName="Task Des" />
+                <ScalarProperty Name="Task_Name" ColumnName="Task Name" />
+                <ScalarProperty Name="ID_User" ColumnName="ID_User" />
+                <ScalarProperty Name="ID_Project" ColumnName="ID_Project" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TB_Note">
+            <EntityTypeMapping TypeName="DBTMSModel.TB_Note">
+              <MappingFragment StoreEntitySet="TB_Note">
+                <ScalarProperty Name="Note_User" ColumnName="Note User" />
+                <ScalarProperty Name="Note_Manger" ColumnName="Note Manger" />
+                <ScalarProperty Name="Note_Des" ColumnName="Note Des" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
